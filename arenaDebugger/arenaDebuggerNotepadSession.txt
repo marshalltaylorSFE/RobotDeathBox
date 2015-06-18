@@ -1,0 +1,13 @@
+<NotepadPlus>
+    <Session activeView="0">
+        <mainView activeIndex="0">
+            <File firstVisibleLine="15" xOffset="0" scrollWidth="1260" startPos="1159" endPos="1159" selMode="0" lang="C++" encoding="-1" filename="D:\github\RobotDeathBox\arenaDebugger\arenaDebugger.ino" />
+        </mainView>
+        <subView activeIndex="3">
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="640" startPos="0" endPos="0" selMode="0" lang="C++" encoding="-1" filename="D:\github\RobotDeathBox\arenaDebugger\timeKeeper.cpp" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1" startPos="0" endPos="0" selMode="0" lang="C++" encoding="-1" filename="D:\github\RobotDeathBox\arenaDebugger\timeKeeper.h" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1" startPos="0" endPos="0" selMode="0" lang="C++" encoding="-1" filename="D:\github\RobotDeathBox\arenaDebugger\timerModule.cpp" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="640" startPos="0" endPos="0" selMode="0" lang="C++" encoding="-1" filename="D:\github\RobotDeathBox\arenaDebugger\timerModule.h" />
+        </subView>
+    </Session>
+</NotepadPlus>
