@@ -1,4 +1,5 @@
 #include "Panel.h"
+//#include "timeKeeper.h"
 
 #define hazardsSwitchPin A2
 #define hazardsOffLedPin 6
@@ -57,3 +58,12 @@ void Panel::update( void )
   doorsRightAjarLed.update();
 }
 
+void Panel::timersMIncrement( uint8_t inputValue )
+{
+  matchReady.buttonDebounceTimeKeeper.mIncrement(inputValue);
+  matchPause.buttonDebounceTimeKeeper.mIncrement(inputValue);
+  countStart.buttonDebounceTimeKeeper.mIncrement(inputValue);
+  countReset.buttonDebounceTimeKeeper.mIncrement(inputValue);
+  eStop.buttonDebounceTimeKeeper.mIncrement(inputValue);
+  
+}

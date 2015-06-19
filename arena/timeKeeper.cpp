@@ -39,9 +39,7 @@ uint16_t TimeKeeper::mGet( void )
 
 void TimeKeeper::mIncrement( uint8_t var_Increment )
 {
-    //clamp it.
-	if( timeElapsed < MAXTIMER )
-	{
-		timeElapsed += var_Increment;
-	}
+    //This can overflow without warning--
+    //  sacrificing coverage for speed
+    timeElapsed += var_Increment;
 }

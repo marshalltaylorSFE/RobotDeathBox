@@ -1,4 +1,7 @@
 #include "PanelComponents.h"
+//#include "timeKeeper.h"
+#include "Arduino.h"
+extern uint8_t ledToggleState;
 
 //---Switch------------------------------------------------------
 PanelSwitch::PanelSwitch( void )
@@ -32,7 +35,7 @@ uint8_t PanelSwitch::getState( void )
   return state;
 }
 
-//---Switch------------------------------------------------------
+//---Button------------------------------------------------------
 PanelButton::PanelButton( void )
 {
 
@@ -50,10 +53,13 @@ void PanelButton::init( uint8_t pinNum )
 void PanelButton::update( void )
 {
   uint8_t tempState = digitalRead( pinNumber ) ^ 0x01;
-  if( state != tempState )
+  if(( state != tempState ) && (buttonDebounceTimeKeeper.mGet() > 1000))
   {
+	//  Serial.println(buttonDebounceTimeKeeper.mGet());
     state = tempState;
     newData = 1;
+	//Start the timer
+	buttonDebounceTimeKeeper.mClear();
   }
 }
 
@@ -84,6 +90,9 @@ void PanelLed::update( void )
 	{
 		case LEDON:
 		digitalWrite( pinNumber, 0 );
+		break;
+		case LEDFLASHING:
+		digitalWrite( pinNumber, ledToggleState);
 		break;
 		default:
 		case LEDOFF:

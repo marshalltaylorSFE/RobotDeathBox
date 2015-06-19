@@ -11,6 +11,8 @@
 //
 //**********************************************************************//
 #include "Arduino.h"
+#include "SoftwareSerial.h"
+
 //*****How to operate TimerClass**************//
 //  Make TimerClass objects for each thing that needs periodic service
 //  pass the interval of the period in ticks
@@ -20,6 +22,7 @@
 
 //**General***********************************//
 #include "stdint.h"
+SoftwareSerial mySerial(8,9);
 
 //**Timers and stuff**************************//
 #include "timerModule.h"
@@ -39,7 +42,11 @@ void setup()
   delay(500);
 
   Serial.begin(9600);
-  Serial.println("Program started\n");
+  //HW port is for winners.
+  //Serial.println("Program started\n");
+  
+  mySerial.begin(9600);
+  mySerial.print("Program started\n");
 
   // initialize IntervalTimer interrupt stuff
   
@@ -80,20 +87,32 @@ void loop()
 //  }
   if(debugTimer.flagStatus() == PENDING)
   {
-    //Get all parameters
-//  Serial.print("\nPos:\n");
-//  Serial.print(" X = ");
-//  Serial.println(myIMU.scaledXX(), 4);
-//
-//  Serial.print("\nThermometer:\n");
-//  Serial.print(" Degrees C = ");
-//  Serial.println(myIMU.readTempC(), 4);
-//  Serial.print(" Degrees F = ");
-//  Serial.println(myIMU.readTempF(), 4);
-
-	//Serial.println(mainSM.rightIn, 4);
-	//Serial.println(testColor.red);
-	Serial.println("Tick");
+	//Build and send a fake-o packet
+	Serial.print("~");
+	Serial.print("0");
+	Serial.print("0");
+	Serial.print("0");
+	Serial.print("1");
+	Serial.print(" ");
+	Serial.print(" ");
+	Serial.print(" ");
+	Serial.print(" ");
+	Serial.print(" ");
+	Serial.print(" ");
+	Serial.print("A");
+	Serial.print("4");
+	Serial.print("3");
+	Serial.print("2");
+	Serial.print("1");
+	Serial.print("0");
+	Serial.print("0");
+	Serial.print("B");
+	Serial.print("E");
+	Serial.print("E");
+	Serial.print("F");
+	Serial.print(".");//Dummy byte bugfix-- shouldn't be needed
+	Serial.write(0x0D);
+	Serial.write(0x0A);
 
   }  
   

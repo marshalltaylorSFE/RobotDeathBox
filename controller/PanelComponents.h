@@ -1,6 +1,7 @@
 #ifndef PANELCOMPONENTS_H
 #define PANELCOMPONENTS_H
 #include <Arduino.h>
+#include "timeKeeper.h"
 
 //---Switch------------------------------------------------------
 class PanelSwitch
@@ -22,6 +23,8 @@ private:
 class PanelButton
 {
 public:
+  TimeKeeper buttonDebounceTimeKeeper;
+  
   PanelButton( void );
   void update( void );
   void init( uint8_t );

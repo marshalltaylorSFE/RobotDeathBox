@@ -3,7 +3,7 @@
 
 #include "PanelComponents.h"
 #include <Arduino.h>
-
+//#include "timeKeeper.h"
 
 class Panel
 {
@@ -11,6 +11,8 @@ public:
   Panel( void );
   void update( void );
   void init( void );
+  void timersMIncrement( uint8_t );
+  
   PanelSwitch hazardsSwitch;
   PanelLed hazardsOffLed;
   PanelLed hazardsActiveLed;
