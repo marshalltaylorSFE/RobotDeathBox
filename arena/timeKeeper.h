@@ -29,7 +29,9 @@ public:
     TimeKeeper( void );
     void mClear( void );
     uint16_t mGet( void );
+	void mSet( uint16_t );
     void mIncrement( uint8_t );
+    void mDecrement( uint8_t );
 
 private:
     uint16_t timeElapsed;

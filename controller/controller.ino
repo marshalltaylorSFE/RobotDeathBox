@@ -33,7 +33,7 @@ Panel myPanel;
 //    cannot exceed variable size.
 
 TimerClass debugTimerClass( 333 );
-TimerClass serialReadCheckTimer( 10 );
+TimerClass serialReadCheckTimer( 1 );
 TimerClass panelUpdateTimer(10);
 uint8_t debugLedStates = 1;
 
@@ -220,6 +220,7 @@ void loop()
 		{
 			Serial.write(txPacket[i]);
 		}
+		Serial.write(0x0A);
 	}
 	
 	// if( tempStatus )
@@ -296,7 +297,7 @@ void loop()
         //put the char in the packet
         rxPacket[packet_ptr] = lastchar;
 		//Serial.println(rxPacket[packet_ptr]);
-		rxPacket[packet_ptr] = char2hex(rxPacket[packet_ptr]);
+		//rxPacket[packet_ptr] = char2hex(rxPacket[packet_ptr]);
         //advance the pointer
         packet_ptr++;
         //turn on LED
@@ -310,10 +311,16 @@ void loop()
     }
     
     //if the packet is full and the last char is LF or CR, *do something here*
-    if((packetPending == 1) && ((packet_ptr == (PACKET_LENGTH)) && ((rxPacket[PACKET_LENGTH - 1] == 0x0A) || (rxPacket[PACKET_LENGTH - 1] == 0x0D))) )
+    // if((packetPending == 1) && ((packet_ptr == (PACKET_LENGTH)) && ((rxPacket[PACKET_LENGTH - 1] == 0x0A) || (rxPacket[PACKET_LENGTH - 1] == 0x0D))) )  // OLD STATEMENT
+	if((packetPending == 1) && ((packet_ptr == (PACKET_LENGTH)) && ((rxPacket[PACKET_LENGTH - 1] == 0x0A) )))
     {
 		//Serial.println("SERVICING PENDING");
 		packetPending = 0;
+	  //Convert ascii type information
+	  rxPacket[1] = char2hex(rxPacket[1]);
+	  rxPacket[2] = char2hex(rxPacket[2]);
+	  rxPacket[3] = char2hex(rxPacket[3]);
+	  rxPacket[4] = char2hex(rxPacket[4]);
       //Look for LED state
 	  switch( (rxPacket[1] >> 2) & 0x03 )
 	  {
@@ -419,6 +426,9 @@ void loop()
 	  
       // This will output the tempString to the S7S
       s7sSendStringI2C(tempString);
+	  
+	  setDecimalsI2C((char2hex(rxPacket[10]) << 4) | (char2hex(rxPacket[11])));
+	  
     }
   }//End checking-for-serial timer
 }

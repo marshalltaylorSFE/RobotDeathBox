@@ -37,9 +37,25 @@ uint16_t TimeKeeper::mGet( void )
     return timeElapsed;
 }
 
-void TimeKeeper::mIncrement( uint8_t var_Increment )
+void TimeKeeper::mSet( uint16_t setValue )
 {
-    //This can overflow without warning--
-    //  sacrificing coverage for speed
-    timeElapsed += var_Increment;
+    timeElapsed = setValue;
+}
+
+void TimeKeeper::mIncrement( uint8_t varIncrement )
+{
+    //clamp it.
+	if( timeElapsed < MAXTIMER )
+	{
+		timeElapsed += varIncrement;
+	}
+}
+
+void TimeKeeper::mDecrement( uint8_t varDecrement )
+{
+    //clamp it.
+	if(((timeElapsed - varDecrement ) >= 0 ) && (timeElapsed != 0 ) )
+	{
+		timeElapsed -= varDecrement;
+	}
 }

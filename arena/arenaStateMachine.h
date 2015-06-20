@@ -24,7 +24,8 @@ enum AStates {
   APauseMatch,
   ABuzzer,
   AEnd,
-  ACountOut
+  ACountOut,
+  ATapOutHold
 
 };
 
@@ -42,12 +43,14 @@ public:
   uint8_t doorsUnlockLed;
   uint8_t doorsLeftAjarLed;
   uint8_t doorsRightAjarLed;
+  uint8_t matchRunning;
+  uint8_t displayMode; //Can be 0 for off, 1 for time, 2 for countout
   
   //Inputs
   uint8_t hazardsSwitch;
   uint8_t judgesReady;
-  uint8_t playerLeftReady;
-  uint8_t playerRightReady;
+  uint8_t playerBlueReady;
+  uint8_t playerRedReady;
   uint8_t matchPause;
   uint8_t countStart;
   uint8_t countReset;
@@ -55,13 +58,27 @@ public:
   uint8_t doorsSwitch;
   uint8_t doorsLeftAjar;
   uint8_t doorsRightAjar;
+  
+  uint8_t redSquareReady;
+  uint8_t redSquareTapOut;
+  uint8_t redSquareLeds;
+  uint8_t blueSquareReady;
+  uint8_t blueSquareTapOut;
+  uint8_t blueSquareLeds;
 
+  TimeKeeper matchCounter;
+  TimeKeeper countoutCounter;
+  
   //State machine stuff  
   AStates state;
   uint8_t matchSecondsRemaining;
-
+  
   ArenaStateMachine( void );
   void tick( void );
+  void clearAllButtons( void );
+  void setLedAllWhite( void );
+  void setLedAllRed( void );
+  void setLedAllOff( void );
 
 };
 
