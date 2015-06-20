@@ -78,8 +78,10 @@ public:
   void clearAllButtons( void );
   void setLedAllWhite( void );
   void setLedAllRed( void );
+  void setLedAllGreen( void );
+  void setLedAllBlue( void );
   void setLedAllOff( void );
-
+  
 };
 
 #endif

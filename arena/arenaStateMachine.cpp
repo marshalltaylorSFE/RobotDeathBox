@@ -145,6 +145,8 @@ void ArenaStateMachine::tick()
 			playerBlueReady = 0;
 			clearAllButtons();
 			setLedAllWhite();
+			//Make it green
+			setLedAllGreen();
 
 		}
 		else //Reset the button
@@ -192,6 +194,7 @@ void ArenaStateMachine::tick()
 		}
 		else if( (playerBlueReady + playerRedReady + judgesReady) == 3)
 		{
+			setLedAllWhite();
 			//Players and arena ready
 			nextState = AFirstStage;
 			Serial.println("moving to AFirstStage");
@@ -448,6 +451,44 @@ void ArenaStateMachine::setLedAllRed( void )
 	digitalWrite(REARDOOR_RED, 1);
 	digitalWrite(REARDOOR_GREEN, 0);
 	digitalWrite(REARDOOR_BLUE, 0);
+}
+
+void ArenaStateMachine::setLedAllGreen( void )
+{
+	digitalWrite(BLUESQUARE_RED, 0);
+	digitalWrite(BLUESQUARE_GREEN, 1);
+	digitalWrite(BLUESQUARE_BLUE, 0);
+	
+	digitalWrite(REDSQUARE_RED, 0);
+	digitalWrite(REDSQUARE_GREEN, 1);
+	digitalWrite(REDSQUARE_BLUE, 0);
+	
+	digitalWrite(MAINDOOR_RED, 0);
+	digitalWrite(MAINDOOR_GREEN, 1);
+	digitalWrite(MAINDOOR_BLUE, 0);
+	
+	digitalWrite(REARDOOR_RED, 0);
+	digitalWrite(REARDOOR_GREEN, 1);
+	digitalWrite(REARDOOR_BLUE, 0);
+}
+
+void ArenaStateMachine::setLedAllBlue( void )
+{
+	digitalWrite(BLUESQUARE_RED, 0);
+	digitalWrite(BLUESQUARE_GREEN, 0);
+	digitalWrite(BLUESQUARE_BLUE, 1);
+	
+	digitalWrite(REDSQUARE_RED, 0);
+	digitalWrite(REDSQUARE_GREEN, 0);
+	digitalWrite(REDSQUARE_BLUE, 1);
+	
+	digitalWrite(MAINDOOR_RED, 0);
+	digitalWrite(MAINDOOR_GREEN, 0);
+	digitalWrite(MAINDOOR_BLUE, 1);
+	
+	digitalWrite(REARDOOR_RED, 0);
+	digitalWrite(REARDOOR_GREEN, 0);
+	digitalWrite(REARDOOR_BLUE, 1);
 }
 
 void ArenaStateMachine::setLedAllOff( void )
