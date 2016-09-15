@@ -27,6 +27,7 @@ public:
   PanelLed doorsUnlockLed;
   PanelLed doorsLeftAjarLed;
   PanelLed doorsRightAjarLed;
+  PanelSwitch hammerTimeSwitch;
 
 protected:
 private:

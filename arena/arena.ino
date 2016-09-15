@@ -41,6 +41,7 @@
 #define  REDSQUARE_TAPOUT_BUTTON_LED    32
 #define  REDSQUARE_READY_BUTTON_LED     33
 #define hazardPin 36
+#define hammerPin 7
 
 //*****How to operate TimerClass**************//
 //  Make TimerClass objects for each thing that needs periodic service
@@ -175,6 +176,7 @@ void setup()
   pinMode( REDSQUARE_READY_BUTTON_LED, OUTPUT);
 
   pinMode( hazardPin, OUTPUT );
+  pinMode( hammerPin, OUTPUT );
   //ARENA LEDS
 
   pinMode(BLUESQUARE_RED, OUTPUT);
@@ -206,6 +208,12 @@ void setup()
   pinMode(segDataPin, OUTPUT);
   pinMode(segLatchPin, OUTPUT);
   
+  //Clear residual serial data
+  while (Serial1.available())
+  {
+    Serial1.read();
+  }
+
 }
 
 void loop()
@@ -254,13 +262,18 @@ void loop()
 //**State machine process timer***************//  
   if(processSMTimer.flagStatus() == PENDING)
   {
-    myArena.tick();
 	//Pure logic stuff
 	myArena.doorsLeftAjar = 0x01 ^ digitalRead( DOORSENSOR_MAIN );
 	myArena.doorsRightAjar = 0x01 ^ digitalRead( DOORSENSOR_REAR );
 	myArena.doorsLeftAjarLed = myArena.doorsLeftAjar;
 	myArena.doorsRightAjarLed = myArena.doorsRightAjar;
+
+	//Process
+    myArena.tick();
+
+	//Hazards
 	digitalWrite( hazardPin, myArena.hazardsOn );
+	digitalWrite( hammerPin, myArena.hammersOn );
 	//Locks
 	digitalWrite( DOORLOCK_MAIN, (0x01 ^ myArena.doorsLocked));
 	digitalWrite( DOORLOCK_REAR, (0x01 ^ myArena.doorsLocked));
@@ -310,7 +323,6 @@ void loop()
 		//Serial.println("redSquareReady");
 		if( myArenaPanel.redSquareReady.getState() == 1 )
 		{
-			Serial.print("setting bit");
 			myArena.redSquareReady = 1;
 		}
 	}
@@ -518,6 +530,7 @@ void loop()
 		//Now update internal variables
 		myArena.hazardsSwitch = ( char2hex(rxPacket[7]) >> 3 ) & 0x01;
 		myArena.doorsSwitch = ( char2hex(rxPacket[7]) >> 2 ) & 0x01;
+		myArena.hammerTimeSwitch = ( char2hex(rxPacket[7]) >> 1 ) & 0x01;
 		if( (( char2hex(rxPacket[5]) >> 3 ) & 0x01) == 1 )//If the bit is set,
 		{
 			myArena.judgesReady = 1; //Can only set, not clear

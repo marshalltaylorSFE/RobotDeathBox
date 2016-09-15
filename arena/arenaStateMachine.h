@@ -36,6 +36,7 @@ public:
   char sSDisplay[4];
   uint8_t doorsLocked;
   uint8_t hazardsOn;
+  uint8_t hammersOn;
   uint8_t hazardsOffLed;
   uint8_t hazardsActiveLed;
   uint8_t matchReadyLed;
@@ -49,6 +50,7 @@ public:
   //Inputs
   uint8_t hazardsSwitch;
   uint8_t judgesReady;
+  uint8_t hammerTimeSwitch;
   uint8_t playerBlueReady;
   uint8_t playerRedReady;
   uint8_t matchPause;

@@ -20,6 +20,9 @@
 
 #include "timeKeeper.h"
 
+#define MATCHLENGTHSECONDS 70
+#define STARTHAZARDSSECONDS 61
+
 // enum AStates {
   // AIdle,
   // AWaitForPlayers,
@@ -49,10 +52,12 @@ ArenaStateMachine::ArenaStateMachine()
 	doorsLeftAjarLed = 0;
 	doorsRightAjarLed = 0;
 	matchRunning = 1;
+	hammersOn = 0;
 	
 	//Inputs
 	hazardsSwitch = 0;
 	judgesReady = 0;
+	hammerTimeSwitch = 0;
 	playerBlueReady = 1;
 	playerRedReady = 1;
 	matchPause = 0;
@@ -63,7 +68,7 @@ ArenaStateMachine::ArenaStateMachine()
 	doorsLeftAjar = 0;
 	doorsRightAjar = 0;
 	
-	matchSecondsRemaining = 300;
+	//matchSecondsRemaining = 300; Not needed?
 	
 	//Player buttons
 	redSquareReady = 0;
@@ -90,11 +95,12 @@ void ArenaStateMachine::tick()
     switch( state )
     {
     case AIdle:
-		//Serial.print(hazardsSwitch);
+		//Serial.println(hazardsSwitch);
+		//Serial.println(hammerTimeSwitch);
 		setLedAllOff();
 		hazardsActiveLed = 0;
 		matchPauseLed = 0;
-		matchCounter.mSet(85);
+		matchCounter.mSet(MATCHLENGTHSECONDS);
 		matchRunning = 0;
 		displayMode = 0;
 		matchReadyLed = 0;
@@ -109,7 +115,7 @@ void ArenaStateMachine::tick()
 			doorsLocked = 1;
 			doorsUnlockLed = 0;			
 		}
-		if( hazardsSwitch == 1 )
+		if(( hazardsSwitch == 1 ) && (hammerTimeSwitch == 1))
 		{
 			hazardsOffLed = 0;
 		}
@@ -156,7 +162,7 @@ void ArenaStateMachine::tick()
         break;
 	case AWaitForPlayers:
 	    //Came from AIdle
-		if( hazardsSwitch == 1 )
+		if(( hazardsSwitch == 1 ) && (hammerTimeSwitch == 1))
 		{
 			hazardsOffLed = 0;
 		}
@@ -168,7 +174,8 @@ void ArenaStateMachine::tick()
 		//Manage player buttons
 		if( redSquareLeds == 1 ) //If green, allow red
 		{
-			if(redSquareReady == 1)
+			//if(redSquareReady == 1)
+			if(1)// ******DEBUG*****
 			{
 				redSquareReady = 0;
 				redSquareLeds = 2;
@@ -177,7 +184,8 @@ void ArenaStateMachine::tick()
 		}
 		if( blueSquareLeds == 1 ) //If green, allow red
 		{
-			if(blueSquareReady == 1)
+			//if(blueSquareReady == 1)
+			if(1)// ******DEBUG*****
 			{
 				blueSquareReady = 0;
 				blueSquareLeds = 2;
@@ -214,25 +222,38 @@ void ArenaStateMachine::tick()
 		{
 			hazardsOffLed = 1;			
 		}
-		if( matchCounter.mGet() < 60 )
+		if( matchCounter.mGet() < STARTHAZARDSSECONDS )
 		{
 			if(( hazardsSwitch == 1 )&&(doorsLeftAjar + doorsRightAjar == 0))
 			{
 				//turn those hazards on
 				hazardsOn = 1;
 				hazardsActiveLed = 1;
+				if( hammerTimeSwitch == 1 )
+				{
+					//turn those hazards on
+					hammersOn = 1;
+				}
+				else
+				{
+					hammersOn = 0;
+				}
 			}
 			else
 			{
 				hazardsOn = 0;
+				hammersOn = 0;
 				hazardsActiveLed = 2;
 			}
+
 		}
 
 		//Timer expired -- priority
 		if( matchCounter.mGet() == 0)
 		{
 			hazardsOn = 0;
+			hammersOn = 0;
+			hazardsActiveLed = 0;
 			//Start safety timer
 			nextState = ABuzzer;
 			Serial.println("moving to ABuzzer");
@@ -244,6 +265,7 @@ void ArenaStateMachine::tick()
 			judgesReady = 0;
 			matchPause = 0;
 			hazardsOn = 0;
+			hammersOn = 0;
 			matchRunning = 0;
 			matchReadyLed = 1;
 			matchPauseLed = 1;
@@ -281,6 +303,7 @@ void ArenaStateMachine::tick()
 			hazardsOffLed = 0;			
 		}
 		hazardsOn = 0;
+		hammersOn = 0;
 		hazardsActiveLed = 0;
 		if((doorsLeftAjar + doorsRightAjar == 0)  && (doorsSwitch == 0))
 		{
@@ -317,23 +340,36 @@ void ArenaStateMachine::tick()
 		break;
 	case ACountOut:
 		hazardsOffLed = hazardsSwitch ^ 0x01;
-		if( matchCounter.mGet() < 60 )
+		if( matchCounter.mGet() < STARTHAZARDSSECONDS )
 		{
 			if(( hazardsSwitch == 1 )&&(doorsLeftAjar + doorsRightAjar == 0))
 			{
 				//turn those hazards on
 				hazardsOn = 1;
 				hazardsActiveLed = 1;
+				if( hammerTimeSwitch == 1 )
+				{
+					//turn those hazards on
+					hammersOn = 1;
+				}
+				else
+				{
+					hammersOn = 0;
+				}
 			}
 			else
 			{
 				hazardsOn = 0;
+				hammersOn = 0;
 				hazardsActiveLed = 2;
 			}
 		}
 		if( countoutCounter.mGet() == 0 )
 		{
 			//Counted OUT!
+			hazardsOn = 0;
+			hammersOn = 0;
+			hazardsActiveLed = 0;
 			nextState = ABuzzer;
 			Serial.println("moving to ABuzzer");
 		}
@@ -343,6 +379,7 @@ void ArenaStateMachine::tick()
 			judgesReady = 0;
 			matchPause = 0;
 			hazardsOn = 0;
+			hammersOn = 0;
 			matchRunning = 0;
 			matchReadyLed = 1;
 			matchPauseLed = 2;
@@ -377,7 +414,9 @@ void ArenaStateMachine::tick()
 		redSquareTapOut = 0;
 		nextState = ATapOutHold;
 		hazardsOn = 0;
+		hammersOn = 0;
 		hazardsActiveLed = 0;
+		Serial.println("BSTO - moving to ATapOutHold");
 	}
 	if( redSquareTapOut == 1 )
 	{
@@ -388,13 +427,17 @@ void ArenaStateMachine::tick()
 		redSquareTapOut = 0;
 		nextState = ATapOutHold;
 		hazardsOn = 0;
+		hammersOn = 0;
 		hazardsActiveLed = 0;
+		Serial.println("RSTO - moving to ATapOutHold");
 	}
 	//Master with the E-Stop
 	if( eStop == 1 )
 	{
+		Serial.println("E-Stop hit, going to AIdle");
 		eStop = 0;
 		hazardsOn = 0;
+		hammersOn = 0;
 		nextState = AIdle;
 	}
     state = nextState;

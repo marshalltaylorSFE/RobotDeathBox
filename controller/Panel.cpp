@@ -15,6 +15,7 @@
 #define doorsUnlockLedPin 8
 #define doorsLeftAjarLedPin 9
 #define doorsRightAjarLedPin 10
+#define hammerTimeSwitchPin 2
 
 Panel::Panel( void )
 {
@@ -37,6 +38,7 @@ void Panel::init( void )
   doorsUnlockLed.init(doorsUnlockLedPin);
   doorsLeftAjarLed.init(doorsLeftAjarLedPin);
   doorsRightAjarLed.init(doorsRightAjarLedPin);
+  hammerTimeSwitch.init(hammerTimeSwitchPin);
   
 }
 
@@ -56,6 +58,7 @@ void Panel::update( void )
   doorsUnlockLed.update();
   doorsLeftAjarLed.update();
   doorsRightAjarLed.update();
+  hammerTimeSwitch.update();
 }
 
 void Panel::timersMIncrement( uint8_t inputValue )

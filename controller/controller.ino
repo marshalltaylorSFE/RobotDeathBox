@@ -194,6 +194,7 @@ void loop()
 	tempStatus |= myPanel.countReset.newData;
 	tempStatus |= myPanel.eStop.newData;
 	tempStatus |= myPanel.doorsSwitch.newData;
+	tempStatus |= myPanel.hammerTimeSwitch.newData;
 	// If new, ship it!
 	
 	if( tempStatus )
@@ -201,6 +202,7 @@ void loop()
 		uint8_t tempValue = 0;
 		tempValue |= (myPanel.hazardsSwitch.getState() << 3);
 		tempValue |= (myPanel.doorsSwitch.getState() << 2);
+		tempValue |= (myPanel.hammerTimeSwitch.getState() << 1);
 		txPacket[7] = hex2char(tempValue);
 		
 		tempValue = 0;
