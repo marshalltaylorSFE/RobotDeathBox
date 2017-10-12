@@ -20,7 +20,7 @@
 
 #include "timeKeeper.h"
 
-#define MATCHLENGTHSECONDS 70
+#define MATCHLENGTHSECONDS 180
 #define STARTHAZARDSSECONDS 61
 
 // enum AStates {
@@ -174,22 +174,24 @@ void ArenaStateMachine::tick()
 		//Manage player buttons
 		if( redSquareLeds == 1 ) //If green, allow red
 		{
-			//if(redSquareReady == 1)
-			if(1)// ******DEBUG*****
+			if(redSquareReady == 1)
+			//if(1)// ******DEBUG*****
 			{
 				redSquareReady = 0;
 				redSquareLeds = 2;
 				playerRedReady = 1;
+				setLedRedSide();
 			}
 		}
 		if( blueSquareLeds == 1 ) //If green, allow red
 		{
-			//if(blueSquareReady == 1)
-			if(1)// ******DEBUG*****
+			if(blueSquareReady == 1)
+			//if(1)// ******DEBUG*****
 			{
 				blueSquareReady = 0;
 				blueSquareLeds = 2;
 				playerBlueReady = 1;
+				setLedBlueSide();
 			}
 		}
 		//High priority: If the arena is no longer ready, go back to idle
@@ -551,4 +553,18 @@ void ArenaStateMachine::setLedAllOff( void )
 	digitalWrite(REARDOOR_RED, 0);
 	digitalWrite(REARDOOR_GREEN, 0);
 	digitalWrite(REARDOOR_BLUE, 0);
+}
+
+void ArenaStateMachine::setLedBlueSide( void )
+{
+//	digitalWrite(BLUESQUARE_RED, 1);
+//	digitalWrite(BLUESQUARE_GREEN, 0);
+//	digitalWrite(BLUESQUARE_BLUE, 0);
+}
+
+void ArenaStateMachine::setLedRedSide( void )
+{
+//	digitalWrite(REDSQUARE_RED, 0);
+//	digitalWrite(REDSQUARE_GREEN, 0);
+//	digitalWrite(REDSQUARE_BLUE, 1);
 }

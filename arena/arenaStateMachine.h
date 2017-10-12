@@ -83,7 +83,8 @@ public:
   void setLedAllGreen( void );
   void setLedAllBlue( void );
   void setLedAllOff( void );
-  
+  void setLedBlueSide( void );
+  void setLedRedSide( void );  
 };
 
 #endif

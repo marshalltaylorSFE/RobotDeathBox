@@ -17,8 +17,8 @@
 //**Arena pin #defines************************//
 //DOORS
 
-#define DOORSENSOR_MAIN  25
-#define DOORSENSOR_REAR  24
+#define DOORSENSOR_MAIN  24
+#define DOORSENSOR_REAR  25
 #define DOORLOCK_MAIN    26
 #define DOORLOCK_REAR    27
 
