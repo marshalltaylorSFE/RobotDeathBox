@@ -5,8 +5,7 @@
 #define USERPACKETDEFS_H
 struct arenaPacket
 {
-	uint8_t packetStatus;
-	uint8_t byteArray[8];
+	uint8_t byteArray[4];
 };
 
 #endif

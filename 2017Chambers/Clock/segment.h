@@ -30,6 +30,7 @@ public:
 	BigDigits();
 	void tick(void);
 	void reset(void);
+	void setDigit( char input, uint8_t pos );
 	
 };
 

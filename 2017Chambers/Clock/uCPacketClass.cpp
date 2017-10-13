@@ -50,7 +50,6 @@ void uCPacketUART::burstReadInputBuffer( void )
 			{
 				spinning++;
 				char lastchar = linkSerial->read();
-				linkSerial->print(lastchar);
 				//look for packet start (startSymbol)
 				if( lastchar == startSymbol )
 				{

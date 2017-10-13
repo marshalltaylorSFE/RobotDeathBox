@@ -1,4 +1,5 @@
 #include "segment.h"
+#include <Arduino.h>
 
 BigDigits::BigDigits()
 {
@@ -51,3 +52,16 @@ void BigDigits::reset(void)
 	bitNumber = 0;
 	byteNumber = 0;
 }
+
+void BigDigits::setDigit( char input, uint8_t pos )
+{
+	if((input >= 0x30)&&(input <= 0x39))//ascii char
+	{
+		byteArray[pos] = bigDigitsLUT[input-0x30];
+	}
+	else
+	{
+		byteArray[pos] = bigDigitsLUT[10];
+	}
+}
+

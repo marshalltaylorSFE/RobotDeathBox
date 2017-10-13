@@ -131,23 +131,25 @@ void loop()
 			dataLinkHandler.getPacket( (uint8_t *)&packet, sizeof packet );
 			//Now do operations on returned packet
 			//if( packet.someVar == blargle ) ...
-			myDigits.byteArray[0] = bigDigitsLUT[packet.byteArray[0]];
-			myDigits.byteArray[1] = bigDigitsLUT[packet.byteArray[1]];
-			myDigits.byteArray[2] = bigDigitsLUT[packet.byteArray[2]];
-			myDigits.byteArray[3] = bigDigitsLUT[packet.byteArray[3]];
-			myDigits.byteArray[4] = bigDigitsLUT[packet.byteArray[4]];
-			myDigits.byteArray[5] = bigDigitsLUT[packet.byteArray[5]];
-			myDigits.byteArray[6] = bigDigitsLUT[packet.byteArray[6]];
-			myDigits.byteArray[7] = bigDigitsLUT[packet.byteArray[7]];
+			myDigits.setDigit(packet.byteArray[0], 0);
+			myDigits.setDigit(packet.byteArray[1], 1);
+			myDigits.setDigit(packet.byteArray[2], 2);
+			myDigits.setDigit(packet.byteArray[3], 3);
+			myDigits.setDigit(packet.byteArray[0], 4);
+			myDigits.setDigit(packet.byteArray[1], 5);
+			myDigits.setDigit(packet.byteArray[2], 6);
+			myDigits.setDigit(packet.byteArray[3], 7);
 			myDigits.reset();
-			Serial.println("Weee");
+		}
+		else
+		{
+			dataLinkHandler.abandonRxPacket();
 		}
 	}	
 	if(debugTimer.flagStatus() == PENDING)
 	{
 		//User code
 		digitalWrite( LEDPIN, digitalRead( LEDPIN ) ^ 0x01 );
-		Serial.println(packet.byteArray[2]);
 	}
 //	if(segmentTimer.flagStatus() == PENDING)
 	{
@@ -157,66 +159,6 @@ void loop()
 		digitalWrite(segDataPin, myDigits.dataState);
 		digitalWrite(segLatchPin, myDigits.latchState);
 	}
-//  if(sendPacketTimer.flagStatus() == PENDING)
-//  {
-//	char tempString[10]; // for the time decimal conversion
-//    // Magical sprintf creates a string for us to send to the s7s.
-//    //  The %4d option creates a 4-digit integer.
-//	tempString[0] = ' ';
-//	tempString[1] = ' ';
-//	tempString[2] = ' ';
-//	tempString[3] = ' ';
-//	
-//	//copy the time stuff
-//	uint16_t tempCounter = myArena.matchCounter.mGet();
-//	uint16_t tempTime = 0;
-//	tempTime = (tempCounter / 60 );
-//	tempTime *= 100;
-//	tempTime += (tempCounter % 60);
-//	switch( myArena.displayMode )
-//	{
-//		case 1:
-//			sprintf(tempString, "%4d", (int)tempTime);
-//			txPacket[10] = '1';
-//			txPacket[11] = '0';
-//			txPacket[12] = tempString[0];
-//			txPacket[13] = tempString[1];
-//			txPacket[14] = tempString[2];
-//			txPacket[15] = tempString[3];
-//			myDigits.byteArray[0] = bigDigitsLUT[char2hex(tempString[3])];
-//			myDigits.byteArray[1] = bigDigitsLUT[char2hex(tempString[2])];
-//			myDigits.byteArray[2] = bigDigitsLUT[char2hex(tempString[1])];
-//			myDigits.byteArray[3] = bigDigitsLUT[char2hex(tempString[3])];
-//			myDigits.byteArray[4] = bigDigitsLUT[char2hex(tempString[2])];
-//			myDigits.byteArray[5] = bigDigitsLUT[char2hex(tempString[1])];
-//			break;
-//		case 2:
-//		    sprintf(tempString, "%4d", (int)myArena.countoutCounter.mGet());
-//			txPacket[10] = '0';
-//			txPacket[11] = '0';
-//			txPacket[12] = '-';
-//			txPacket[13] = tempString[2];
-//			txPacket[14] = tempString[3];
-//			txPacket[15] = '-';
-//			myDigits.byteArray[0] = bigDigitsLUT[char2hex(' ')];
-//			myDigits.byteArray[1] = bigDigitsLUT[char2hex(tempString[3])];
-//			myDigits.byteArray[2] = bigDigitsLUT[char2hex(tempString[2])];
-//			myDigits.byteArray[3] = bigDigitsLUT[char2hex(' ')];
-//			myDigits.byteArray[4] = bigDigitsLUT[char2hex(tempString[3])];
-//			myDigits.byteArray[5] = bigDigitsLUT[char2hex(tempString[2])];
-//			break;
-//		default:
-//			txPacket[10] = '0';
-//			txPacket[11] = '0';
-//			txPacket[12] = '-';
-//			txPacket[13] = '-';
-//			txPacket[14] = '-';
-//			txPacket[15] = '-';			
-//		break;
-//	}
-//	myDigits.reset();
-//  } 
-
 }
 
 //If 328p based, do this

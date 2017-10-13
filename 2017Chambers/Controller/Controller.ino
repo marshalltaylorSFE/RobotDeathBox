@@ -40,13 +40,15 @@ IntervalTimer myTimer;
 //**Copy to make a new timer******************//  
 //TimerClass32 msTimerA( 200 ); //200 ms
 TimerClass debugTimer( 1000 ); //milliseconds between calls
-TimerClass secondTimer( 1000 ); //milliseconds between calls
+TimerClass halfSecondTimer( 500 ); //milliseconds between calls
+uint8_t secondToggler = 0;
 TimerClass segmentTimer( 3 );
 TimerClass remoteInputTimer( 3 );
 TimerClass serialSendTimer( 100 );
 
 uint16_t msTicks = 0;
 uint8_t msTicksLocked = 1; //start locked out
+uint8_t pauseFlag = 0;
 
 void setup()
 {
@@ -95,7 +97,7 @@ void loop()
 	//Update the timers, but only once per interrupt
 	if( msTicksLocked == 0 )
 	{
-		secondTimer.update(msTicks);
+		halfSecondTimer.update(msTicks);
 		debugTimer.update(msTicks);
 		segmentTimer.update(msTicks);
 		remoteInputTimer.update(msTicks);
@@ -104,27 +106,51 @@ void loop()
 		//Done?  Lock it back up
 		msTicksLocked = 1;
 	}  //The ISR will unlock.
-	if(secondTimer.flagStatus() == PENDING)
-	{
+	if(halfSecondTimer.flagStatus() == PENDING)
+	{ 
+		secondToggler ^= 0x01;
 		if(myCustomPanel.timerRunning)
 		{
-			if(myCustomPanel.timeRemaining > 0)
+			if((myCustomPanel.timeRemaining > 0)&&(secondToggler == 1))
 			{
 				myCustomPanel.timeRemaining--;
 				if(myCustomPanel.timeRemaining == 0)
 				{
-					//myCustomPanel.timerRunning = 0;
-					//myCustomPanel.timeExpired = 1;
-					myCustomPanel.timeRemaining = 20;
+					myCustomPanel.timerRunning = 0;
+					myCustomPanel.timeExpired = 1;
 				}
-				int temp = myCustomPanel.timeRemaining;
-				packet.byteArray[0] = (temp / 100);
-				packet.byteArray[1] = ((temp - (packet.byteArray[0]*100))/ 10);
-				packet.byteArray[2] = ((temp - (packet.byteArray[1]*10)));
 				//Serial.println(myCustomPanel.timeRemaining);
 			}
 		}
-		
+		if((myCustomPanel.displayOn == 0)||((secondToggler == 0) && myCustomPanel.displayFlashing == 1))
+		{
+			packet.byteArray[0] = ' ';
+			packet.byteArray[1] = ' ';
+			packet.byteArray[2] = ' ';
+			packet.byteArray[3] = ' ';
+		}
+		else
+		{
+			char buffer[5];
+			sprintf(buffer, "%2d", myCustomPanel.timeRemaining / 60);
+			packet.byteArray[2] = buffer[1];
+			packet.byteArray[3] = buffer[0];
+			if(myCustomPanel.timeRemaining < 60)
+			{
+				packet.byteArray[2] = ' ';
+				packet.byteArray[3] = ' ';
+			}
+			if(myCustomPanel.timeRemaining > 9)
+			{
+				sprintf(buffer, "%02d", myCustomPanel.timeRemaining % 60);
+			}
+			else
+			{
+				sprintf(buffer, "%2d", myCustomPanel.timeRemaining % 60);
+			}
+			packet.byteArray[0] = buffer[1];
+			packet.byteArray[1] = buffer[0];
+		}
 	}
 	if(serialSendTimer.flagStatus() == PENDING)
 	{
