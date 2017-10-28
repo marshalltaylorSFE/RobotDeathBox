@@ -20,7 +20,7 @@
 
 #include "timeKeeper.h"
 
-#define MATCHLENGTHSECONDS 180
+#define MATCHLENGTHSECONDS 120
 #define STARTHAZARDSSECONDS 61
 
 // enum AStates {

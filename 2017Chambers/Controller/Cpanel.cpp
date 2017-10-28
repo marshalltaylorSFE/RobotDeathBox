@@ -109,7 +109,7 @@ void CPanel::tickStateMachine( int msTicksDelta )
 		}
 		break;
 		case PStartHorn:
-		if(stateTimer.mGet() > 333)
+		if(stateTimer.mGet() > 100)
 		{
 			horn.setState(LEDOFF);
 			state = PRun;
@@ -152,7 +152,7 @@ void CPanel::tickStateMachine( int msTicksDelta )
 			}
 		break;
 		case PPauseHorn:
-		if(stateTimer.mGet() > 333)
+		if(stateTimer.mGet() > 100)
 		{
 			horn.setState(LEDOFF);
 			state = PPause;
@@ -189,7 +189,7 @@ void CPanel::tickStateMachine( int msTicksDelta )
 			timeRemaining = timeSetting;
 		break;
 		case PStopHorn:
-			if(stateTimer.mGet() > 1500)
+			if(stateTimer.mGet() > 300)
 			{
 				horn.setState(LEDOFF);
 				state = PEnd;
